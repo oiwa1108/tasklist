@@ -41,7 +41,7 @@ public class UpdateServlet extends HttpServlet {
             Task task = em.find(Task.class, (Integer) request.getSession().getAttribute("task_id"));
 
             String content = request.getParameter("content");
-            task.setContent(content);
+            task.setContent(content.strip());
 
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             task.setUpdated_at(currentTime);
