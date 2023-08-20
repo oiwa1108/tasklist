@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 import javax.persistence.EntityManager;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Task;
+import models.validators.TaskValidator;
 import utils.DBUtil;
 
 /**
@@ -44,17 +46,29 @@ public class UpdateServlet extends HttpServlet {
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             task.setUpdated_at(currentTime);
 
-            // データベースを更新
-            em.getTransaction().begin();
-            em.getTransaction().commit();
-            request.getSession().setAttribute("flush", "更新が完了しました。");
-            em.close();
+            String error = TaskValidator.validate(content);
+            if (error != null) {
+                em.close();
+                request.setAttribute("_token", request.getSession().getId());
+                request.setAttribute("task", task);
+                request.setAttribute("error", error);
 
-            // セッションスコープ上の不要になったデータを削除
-            request.getSession().removeAttribute("task_id");
+                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/edit.jsp");
+                rd.forward(request, response);
 
-            // indexページへリダイレクト
-            response.sendRedirect(request.getContextPath() + "/index");
+            } else {
+                // データベースを更新
+                em.getTransaction().begin();
+                em.getTransaction().commit();
+                request.getSession().setAttribute("flush", "更新が完了しました。");
+                em.close();
+
+                // セッションスコープ上の不要になったデータを削除
+                request.getSession().removeAttribute("task_id");
+
+                // indexページへリダイレクト
+                response.sendRedirect(request.getContextPath() + "/index");
+            }
         }
     }
 }

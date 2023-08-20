@@ -14,13 +14,11 @@
                     </tr>
                     <tr>
                         <th>作成日時</th>
-                        <td><fmt:formatDate value="${task.created_at}"
-                                pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                        <td><fmt:formatDate value="${task.created_at}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                     </tr>
                     <tr>
                         <th>更新日時</th>
-                        <td><fmt:formatDate value="${task.updated_at}"
-                                pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                        <td><fmt:formatDate value="${task.updated_at}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                     </tr>
                 </table>
                 <p>

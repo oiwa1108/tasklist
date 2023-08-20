@@ -6,6 +6,12 @@
         <c:choose>
             <c:when test="${task != null}">
                 <h2>id: ${task.id} のタスク編集ページ</h2>
+                <c:if test="${error != null}">
+                    <div class="error-message">
+                        入力内容にエラーがあります。<br /> ・
+                        <c:out value="${error}" />
+                    </div>
+                </c:if>
                 <form method="POST"
                     action="${pageContext.request.contextPath}/update">
                     <c:import url="_form.jsp" />
@@ -16,8 +22,7 @@
                 <p>
                     <a href="#" onclick="confirmDestroy();">このメッセージを削除する</a>
                 </p>
-                <form method="POST"
-                    action="${pageContext.request.contextPath}/destroy">
+                <form method="POST" action="${pageContext.request.contextPath}/destroy">
                     <input type="hidden" name="_token" value="${_token}" />
                 </form>
                 <script>
