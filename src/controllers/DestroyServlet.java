@@ -35,19 +35,21 @@ public class DestroyServlet extends HttpServlet {
         if (_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
 
+            // セッションスコープからタスクのIDを取得して該当のIDのタスク1件のみをデータベースから取得
             Task task = em.find(Task.class, (Integer) request.getSession().getAttribute("task_id"));
 
             em.getTransaction().begin();
+            // データ削除
             em.remove(task);
             em.getTransaction().commit();
             request.getSession().setAttribute("flush", "削除が完了しました。");
             em.close();
 
+            // セッションスコープ上の不要になったデータを削除
             request.getSession().removeAttribute("task_id");
 
             // indexページへリダイレクト
             response.sendRedirect(request.getContextPath() + "/index");
         }
     }
-
 }

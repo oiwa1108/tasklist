@@ -46,9 +46,12 @@ public class UpdateServlet extends HttpServlet {
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             task.setUpdated_at(currentTime);
 
+            // バリデーションを実行してエラーがあったら編集画面のフォームに戻る
             String error = TaskValidator.validate(content);
             if (error != null) {
                 em.close();
+
+                // フォームに初期値を設定、さらにエラーメッセージを送る
                 request.setAttribute("_token", request.getSession().getId());
                 request.setAttribute("task", task);
                 request.setAttribute("error", error);

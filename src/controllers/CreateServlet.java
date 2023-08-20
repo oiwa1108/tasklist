@@ -48,6 +48,7 @@ public class CreateServlet extends HttpServlet {
             task.setCreated_at(currentTime);
             task.setUpdated_at(currentTime);
 
+            // バリデーションを実行してエラーがあったら新規登録のフォームに戻る
             String error = TaskValidator.validate(content);
             if (error != null) {
                 em.close();
@@ -59,14 +60,15 @@ public class CreateServlet extends HttpServlet {
                 rd.forward(request, response);
 
             } else {
+                // データベースに保存
                 em.persist(task);
                 em.getTransaction().commit();
                 request.getSession().setAttribute("flush", "登録が完了しました。");
                 em.close();
 
+                // indexのページにリダイレクト
                 response.sendRedirect(request.getContextPath() + "/index");
             }
-
         }
     }
 }
